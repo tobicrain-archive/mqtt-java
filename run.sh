@@ -1,0 +1,3 @@
+#!/bin/bash
+
+java -classpath ./target/classes:/Users/tobikrain/.m2/repository/org/mongodb/mongodb-driver-sync/4.3.1/mongodb-driver-sync-4.3.1.jar:/Users/tobikrain/.m2/repository/org/mongodb/bson/4.3.1/bson-4.3.1.jar:/Users/tobikrain/.m2/repository/org/mongodb/mongodb-driver-core/4.3.1/mongodb-driver-core-4.3.1.jar:/Users/tobikrain/.m2/repository/org/eclipse/paho/org.eclipse.paho.client.mqttv3/1.2.0/org.eclipse.paho.client.mqttv3-1.2.0.jar org.hhs.Main

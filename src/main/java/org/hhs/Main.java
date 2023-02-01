@@ -2,66 +2,40 @@ package org.hhs;
 
 
 import com.mongodb.client.MongoClient;
-import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoDatabase;
 import org.bson.Document;
 import org.eclipse.paho.client.mqttv3.MqttClient;
-import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
-import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
-
-import java.util.ArrayList;
-import java.util.UUID;
+import org.eclipse.paho.client.mqttv3.MqttException;
 
 public class Main {
+    static MongoClient mongoClient = MongoUtil.getMongoClient();
+    static MongoDatabase database = MongoUtil.getMainDatabase(mongoClient);
 
-    static MongoClient getMongoClient() {
-        return MongoClients.create(String.format(Constants.CONNECTION_STRING, Constants.HOST, Constants.PORT));
+    static MqttClient mqttClient;
+
+    static {
+        try {
+            mqttClient = MQTTUtil.getMqttClient();
+        } catch (MqttException e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    static MongoDatabase getMainDatabase(MongoClient mongoClient) {
-        return mongoClient.getDatabase(Constants.DATABASE_NAME);
-    }
 
     public static void main(String[] args) {
 
+        MongoUtil.debugPrint(database);
 
-        String broker = "tcp://localhost:1883";
-        String publishClient = "publish_client";
-
-        MongoClient mongoClient = getMongoClient();
-
-        MongoDatabase database = getMainDatabase(mongoClient);
-
-        System.out.println("Connected to database: " + Constants.DATABASE_NAME);
-
-        // list all collections
-        for (String name : database.listCollectionNames()) {
-            System.out.println(name);
-        }
-
-        if (!database.listCollectionNames().into(new ArrayList<String>()).contains(Constants.TABLE_NAME)) {
-            database.createCollection(Constants.TABLE_NAME);
-        }
-
-        // list all documents in collection temperatures
-        for (Document document : database.getCollection(Constants.TABLE_NAME).find()) {
-            System.out.println(document);
-        }
-
-        String publisherId = UUID.randomUUID().toString();
         try {
-            // subscribe to mqtt broker 10.100.240.12 on topic "temperature"
-            MqttClient client = new MqttClient(broker, publishClient, new MemoryPersistence());
-            MqttConnectOptions options = new MqttConnectOptions();
-            client.connect(options);
-            System.out.println("Connected to broker: " + broker);
-            client.subscribe("temperature", (topic, message) -> {
+            MQTTUtil.connect(mqttClient);
+
+            mqttClient.subscribe("temperature", (topic, message) -> {
                 System.out.println("Received message: " + new String(message.getPayload()));
                 Document document = Document.parse(new String(message.getPayload()));
                 database.getCollection(Constants.TABLE_NAME).insertOne(document);
             });
 
-            client.publish("temperature", "test".getBytes(), 0, false);
+            mqttClient.publish("temperature", "test".getBytes(), 0, false);
 
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());

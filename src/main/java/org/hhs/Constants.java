@@ -8,5 +8,4 @@ public class Constants {
     public static final String BROKER = "tcp://localhost:1883";
     public static final String PUBLISH_CLIENT = "publish_client";
     public static final String CONNECTION_STRING = "mongodb://%s:%s";
-
 }
