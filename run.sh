@@ -1,3 +1,11 @@
 #!/bin/bash
 
-java -classpath ./target/classes:/Users/tobikrain/.m2/repository/org/mongodb/mongodb-driver-sync/4.3.1/mongodb-driver-sync-4.3.1.jar:/Users/tobikrain/.m2/repository/org/mongodb/bson/4.3.1/bson-4.3.1.jar:/Users/tobikrain/.m2/repository/org/mongodb/mongodb-driver-core/4.3.1/mongodb-driver-core-4.3.1.jar:/Users/tobikrain/.m2/repository/org/eclipse/paho/org.eclipse.paho.client.mqttv3/1.2.0/org.eclipse.paho.client.mqttv3-1.2.0.jar org.hhs.Main
+# Pfade zu den Jar-Dateien als Variablen speichern
+CLASSES_PATH=./target/classes
+MONGO_DRIVER_SYNC=:libs/mongodb-driver-sync-4.3.1.jar
+BSON=:libs/bson-4.3.1.jar
+MONGO_DRIVER_CORE=:libs/mongodb-driver-core-4.3.1.jar
+PAHO_CLIENT=:libs/org.eclipse.paho.client.mqttv3-1.2.0.jar
+
+# Verwenden Sie die Variablen im Befehl
+java -classpath $CLASSES_PATH$MONGO_DRIVER_SYNC$BSON$MONGO_DRIVER_CORE$PAHO_CLIENT org.hhs.Main
