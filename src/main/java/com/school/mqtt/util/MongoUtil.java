@@ -1,4 +1,4 @@
-package org.hhs;
+package com.school.mqtt.util;
 
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
@@ -9,14 +9,19 @@ import java.util.ArrayList;
 
 public class MongoUtil {
 
-    static MongoClient getMongoClient() {
-        MongoClient client = MongoClients.create(String.format(Constants.CONNECTION_STRING, Constants.HOST, Constants.PORT));
+    public static MongoClient getMongoClient() {
+        String conString = String.format(Constants.CONNECTION_STRING, Constants.HOST, Constants.PORT);
+        MongoClient client = MongoClients.create(conString);
         System.out.println("Connected to database: " + Constants.DATABASE_NAME);
         return client;
     }
 
-    static MongoDatabase getMainDatabase(MongoClient mongoClient) {
+    public static MongoDatabase getMainDatabase(MongoClient mongoClient) {
         return mongoClient.getDatabase(Constants.DATABASE_NAME);
+    }
+
+    public static void close(MongoClient mongoClient) {
+        mongoClient.close();
     }
 
     static void debugPrint(MongoDatabase database) {

@@ -1,4 +1,4 @@
-package org.hhs;
+package com.school.mqtt.util;
 
 public class Constants {
     public static final String HOST = "localhost";

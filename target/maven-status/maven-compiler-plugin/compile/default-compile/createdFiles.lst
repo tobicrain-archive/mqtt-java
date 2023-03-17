@@ -1,4 +1,2 @@
-org/hhs/MongoUtil.class
-org/hhs/Constants.class
-org/hhs/Main.class
-org/hhs/MQTTUtil.class
+com/school/mqtt/HelloApplication.class
+module-info.class
